@@ -8,4 +8,5 @@ class ProfesorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profesor
-        fields = ('username', 'first_name','last_name', 'email', 'direccion', 'telefono', 'facultad', 'cursos')
+        fields = ('username', 'first_name', 'last_name', 'email', 'direccion', 'telefono', 'facultad', 'cursos')
+
