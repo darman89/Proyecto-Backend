@@ -79,10 +79,14 @@ class RespEstudianteMultipleView(ListModelMixin, CreateModelMixin, GenericAPIVie
 
 
 class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
-    # queryset usado para retornar los objetos requeridos
-    queryset = Pregunta.objects.all()
+    # Add filter fields for the API
+    filterset_fields = ("actividad",)
     # clase serializer para la transformacion de datos del request
     serializer_class = PreguntaSerializer
+
+    def get_queryset(self):
+        actividad = self.request.query_params.get('actividad')
+        return Pregunta.objects.filter(actividad=actividad)
 
     def perform_create(self, serializer):
         actividad = get_object_or_404(
@@ -94,5 +98,3 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
-		
-
