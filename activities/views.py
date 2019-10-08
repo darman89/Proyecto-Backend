@@ -2,8 +2,8 @@ from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from django.shortcuts import get_object_or_404
 
-from activities.serializers import MarcaSerializer, ActividadSerializer
-from activities.models import Marca, Actividad
+from activities.serializers import MarcaSerializer, ActividadSerializer, RespuestaMultipleEstudianteSerializer
+from activities.models import Marca, Actividad, RespuestmultipleEstudiante, Pregunta
 from interactive_content.models import ContenidoInteractivo
 
 # Create your views here.
@@ -36,6 +36,24 @@ class ActividadView(ListModelMixin, CreateModelMixin, GenericAPIView):
         marca = get_object_or_404(
             Marca, id=self.request.data.get('marca'))
         return serializer.save(marca=marca)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, *kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
+
+
+class RespEstudianteMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    # queryset usado para retornar los objetos requeridos
+    queryset = RespuestmultipleEstudiante.objects.all()
+    # clase serializer para la transformacion de datos del request
+    serializer_class = RespuestaMultipleEstudianteSerializer
+
+    def perform_create(self, serializer):
+        pregunta = get_object_or_404(
+            Pregunta, id=self.request.data.get('preguntaSeleccionMultiple'))
+        return serializer.save(preguntaSeleccionMultiple=pregunta)
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, *kwargs)
