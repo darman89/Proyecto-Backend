@@ -7,7 +7,7 @@ from users.models import Profesor, Estudiante
 class Curso(models.Model):
     fecha_creacion = models.DateTimeField(null=False, auto_now_add=True)
     nombre = models.CharField(max_length=255, blank=False, null=False)
-    profesor = models.ForeignKey(Profesor, blank=False, null=False, on_delete=models.CASCADE)
+    profesor = models.ForeignKey(Profesor, blank=False, null=False, on_delete=models.CASCADE, related_name="cursos")
     descripcion = models.TextField(max_length=255, blank=False, null=False)
 
 
