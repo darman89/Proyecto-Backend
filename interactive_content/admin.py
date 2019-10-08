@@ -1,7 +1,8 @@
 from django.contrib import admin
-from interactive_content.models import Curso
-from users.models import Profesor
 
 # Register your models here.
-admin.site.register(Curso)
-admin.site.register(Profesor)
+from interactive_content.models import Curso, Contenido, ContenidoInteractivo, Grupo
+
+Models = [Curso, Contenido, ContenidoInteractivo, Grupo]
+
+admin.site.register(Models)
