@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from interactive_content.models import Contenido
+from interactive_content.models import Contenido, Curso
 
 
 class ContenidoSerializer(serializers.ModelSerializer):
@@ -13,8 +13,6 @@ class ContenidoSerializer(serializers.ModelSerializer):
 
 
 class CursoSerializer(serializers.ModelSerializer):
-    nombre = serializers.CharField()
-
     class Meta:
-        model = Contenido
-        fields = ('id', 'nombre')
+        model = Curso
+        fields = '__all__'

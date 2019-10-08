@@ -3,7 +3,7 @@ from datetime import datetime
 
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -85,3 +85,8 @@ def courses_view(request):
         response.accepted_media_type = "application/json"
         response.renderer_context = {}
         return response
+
+
+class CursoViewSet(viewsets.ModelViewSet):
+    queryset = Curso.objects.all()
+    serializer_class = CursoSerializer
