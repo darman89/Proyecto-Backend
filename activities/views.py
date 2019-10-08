@@ -8,9 +8,14 @@ from interactive_content.models import ContenidoInteractivo
 
 # Create your views here.
 
+
 class MarcaView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # queryset usado para retornar los objetos requeridos
-    queryset = Marca.objects.all()
+    def get_queryset(self):
+        # Add filter to get all the activities of a desired Marca
+        contenido = self.request.query_params.get('contenido', None)
+        return Marca.objects.filter(contenido=contenido)
+
     # clase serializer para la transformacion de datos del request
     serializer_class = MarcaSerializer
 
@@ -28,7 +33,11 @@ class MarcaView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
 class ActividadView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # queryset usado para retornar los objetos requeridos
-    queryset = Actividad.objects.all()
+    def get_queryset(self):
+        # Add filter to get all the activities of a desired Marca
+        marca = self.request.query_params.get('marca', None)
+        return Actividad.objects.filter(marca=marca)
+
     # clase serializer para la transformacion de datos del request
     serializer_class = ActividadSerializer
 
@@ -45,8 +54,15 @@ class ActividadView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
 
 class RespEstudianteMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    # Add filter fields for the API
+    filterset_fields = ("estudiante", "preguntaSeleccionMultiple")
+
     # queryset usado para retornar los objetos requeridos
-    queryset = RespuestmultipleEstudiante.objects.all()
+    def get_queryset(self):
+        # Add filter to get all the answers of a desired student
+        estudiante = self.request.query_params.get('estudiante', None)
+        return RespuestmultipleEstudiante.objects.filter(estudiante=estudiante)
+
     # clase serializer para la transformacion de datos del request
     serializer_class = RespuestaMultipleEstudianteSerializer
 
@@ -60,3 +76,9 @@ class RespEstudianteMultipleView(ListModelMixin, CreateModelMixin, GenericAPIVie
 
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
+
+
+# class RespOpMultEstudiantetFilter(filters.FilterSet):
+#     class Meta:
+#         model = RespuestmultipleEstudiante
+#         fields = ('estudiante', 'preguntaSeleccionMultiple')

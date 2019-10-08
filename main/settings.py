@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'activities',
     'interactive_content',
     'users',
-    'rest_framework'
+    'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -79,11 +80,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-DATABASES = {
-    'default': {
-
-    }
-}
+DATABASES = {'default': {}}
 
 
 # Password validation
@@ -138,5 +135,6 @@ django_heroku.settings(locals())
 # del DATABASES['default']['OPTIONS']['sslmode']
 
 REST_FRAMEWORK = {
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
