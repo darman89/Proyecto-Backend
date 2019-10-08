@@ -28,4 +28,13 @@ class RespuestaMultipleEstudianteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return RespuestmultipleEstudiante.objects.create(**validated_data)
 
+
+class PreguntaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Pregunta
+        fields = ('id', 'Pregunta', 'actividad')
+
+    def create(self, validated_data):
+        return Pregunta.objects.create(**validated_data)
+
            
