@@ -7,8 +7,8 @@ from django.db import models
 
 
 class Usuario(AbstractUser, PolymorphicModel):
-    direccion = models.CharField( max_length=255, blank=True, null=True)
-    telefono = models.CharField( max_length=255, blank=True, null=True)
+    direccion = models.CharField(max_length=255, blank=True, null=True)
+    telefono = models.CharField(max_length=255, blank=True, null=True)
     fecha_modificacion = models.DateTimeField(null=False, auto_now=True)
     fecha_creacion = models.DateTimeField(null=False, auto_now_add=True)
 

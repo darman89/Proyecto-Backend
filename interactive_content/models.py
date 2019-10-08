@@ -10,11 +10,17 @@ class Curso(models.Model):
     profesor = models.ForeignKey(Profesor, blank=False, null=False, on_delete=models.CASCADE)
     descripcion = models.TextField(max_length=255, blank=False, null=False)
 
+    def __str__(self):
+        return self.nombre
+
 
 class Contenido(models.Model):
     url = models.CharField(max_length=255, blank=False, null=False)
     nombre = models.CharField(max_length=255, blank=False, null=False)
     profesor = models.ForeignKey(Profesor, blank=False, null=False, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.nombre
 
 
 class ContenidoInteractivo(models.Model):
@@ -24,9 +30,19 @@ class ContenidoInteractivo(models.Model):
     tiene_retroalimentacion = models.BooleanField()
     curso = models.ForeignKey(Curso, blank=False, null=False, on_delete=models.CASCADE)
 
+    class Meta:
+        verbose_name = 'contenido interactivo'
+        verbose_name_plural = 'contenidos interactivos'
+
+    def __str__(self):
+        return self.contenido.nombre + '-' + str(self.fecha_creacion)
+
 
 class Grupo(models.Model):
     curso = models.ForeignKey(Curso, blank=False, null=False, on_delete=models.CASCADE)
     estudiante = models.ForeignKey(Estudiante, blank=False, null=False, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.curso.nombre
 
 
