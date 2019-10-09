@@ -19,6 +19,7 @@ class CursoSerializer(serializers.ModelSerializer):
 
 
 class ContenidoInteractivoSerializer(serializers.ModelSerializer):
+    curso = CursoSerializer(read_only=True, many=True)
     contenido = ContenidoSerializer(read_only=True)
 
     class Meta:

@@ -1,6 +1,7 @@
 # Create your views here.
 from datetime import datetime
 
+from django.db.models import Subquery
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
@@ -67,13 +68,18 @@ def contents_view(request):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def courses_view(request):
+def courses_view(request, content_id):
     # Tomando información del usuario
     user_id = request.user.id
     # Verificar que el docente tenga contenido creado
     try:
         # Recuperar el contenido que creó el profesor
-        contents_list = Curso.objects.filter(profesor_id=user_id)
+        contents = ContenidoInteractivo.curso.through.objects.filter(contenidointeractivo_id=content_id)
+        if not contents:
+            contents_list = Curso.objects.filter(profesor_id=user_id)
+        else:
+            contents_list = Curso.objects.filter(profesor_id=user_id).exclude(pk=Subquery(contents.values('curso_id')))
+
     except (KeyError, Curso.DoesNotExist):
         # devolver vacio si no existe contenido creado por el usuario
         return JsonResponse({})
