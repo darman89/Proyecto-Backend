@@ -22,7 +22,8 @@ from rest_framework.authtoken import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/v1/', include('interactive_content.urls')),    
-    path('api/v1/', include('activities.urls')),    
+    path('api/v1/', include('activities.urls')),
+    path('api/v1', include('rest_framework.urls'))    
     # path('users/', include('users.urls')),    
     # path('activities/', include('activities.urls')),
 ]

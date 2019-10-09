@@ -119,7 +119,7 @@ class RespMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # permission_classes = [IsAuthenticated]
 
     # Add filter fields for the API
-    filterset_fields = ("preguntaSeleccionMultiple",)
+    filterset_fields = ("preguntaSeleccionMultiple", "esCorrecta")
 
     # queryset usado para retornar los objetos requeridos
     def get_queryset(self):
