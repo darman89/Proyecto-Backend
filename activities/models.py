@@ -71,4 +71,4 @@ class RespuestaEstudianteVoF(models.Model):
     nota = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.respuesta
+        return str(self.respuesta)

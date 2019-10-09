@@ -12,6 +12,7 @@ from .models import Marca, Actividad, Pregunta, RespuestaEstudianteVoF, Respuest
 @csrf_exempt
 def reports(request):
 
+    #TODO: Get correct professor through token or session
     get_the_professor = Profesor.objects.first()
 
     big_json = {}
