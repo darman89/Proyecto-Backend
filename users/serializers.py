@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from users.models import Profesor
+from users.models import Profesor, Estudiante
 from interactive_content.serializers import CursoSerializer
 
 
@@ -10,3 +10,9 @@ class ProfesorSerializer(serializers.ModelSerializer):
         model = Profesor
         fields = ('username', 'first_name', 'last_name', 'email', 'direccion', 'telefono', 'facultad', 'cursos')
 
+
+class EstudianteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Estudiante
+        fields = ('codigo_de_estudiante', 'first_name', 'last_name', 'email', 'direccion', 'telefono', 'username')
