@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from activities.models import Marca, Actividad, Pregunta, RespuestmultipleEstudiante 
+from activities.models import Marca, Actividad, Pregunta, RespuestmultipleEstudiante, Respuestmultiple 
 
 
 class MarcaSerializer(serializers.ModelSerializer):
@@ -37,4 +37,12 @@ class PreguntaSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return Pregunta.objects.create(**validated_data)
 
+
+class RespuestaMultipleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Respuestmultiple
+        fields = ('id', 'respuesta', 'esCorrecta', 'preguntaSeleccionMultiple')          
+
+    def create(self, validated_data):
+        return Respuestmultiple.objects.create(**validated_data)
            
