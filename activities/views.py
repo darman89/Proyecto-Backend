@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404
 from activities.serializers import MarcaSerializer, ActividadSerializer, RespuestaMultipleEstudianteSerializer, PreguntaSerializer, RespuestaMultipleSerializer
 from activities.models import Marca, Actividad, RespuestmultipleEstudiante, Pregunta, Respuestmultiple
 from interactive_content.models import ContenidoInteractivo
-from activities.permissions import IsOwnerOrReadOnly
 from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 # Create your views here.
@@ -13,7 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 
 class MarcaView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # Add permissions to the view
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
     # queryset usado para retornar los objetos requeridos
     def get_queryset(self):
