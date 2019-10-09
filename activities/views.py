@@ -3,7 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
 from users.models import Profesor
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.core import serializers
 
 from .models import Marca, Actividad, Pregunta, RespuestaEstudianteVoF, RespuestmultipleEstudiante, Respuestmultiple, RespuestaVoF
@@ -12,8 +12,11 @@ from .models import Marca, Actividad, Pregunta, RespuestaEstudianteVoF, Respuest
 @csrf_exempt
 def reports(request):
 
-    #TODO: Get correct professor through token or session
-    get_the_professor = Profesor.objects.first()
+    #Get correct professor through token or session
+    try:
+        get_the_professor = Profesor.objects.get(id=request.user.id)
+    except:
+        return HttpResponseNotFound()
 
     big_json = {}
     big_json['username'] = get_the_professor.username
