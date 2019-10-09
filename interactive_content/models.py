@@ -28,7 +28,7 @@ class ContenidoInteractivo(models.Model):
     fecha_creacion = models.DateTimeField(null=False, auto_now_add=True)
     tiempo_disponibilidad = models.DateTimeField(null=True, blank=True)
     tiene_retroalimentacion = models.BooleanField()
-    curso = models.ForeignKey(Curso, blank=False, null=False, on_delete=models.CASCADE)
+    curso = models.ManyToManyField(Curso)
 
     class Meta:
         verbose_name = 'contenido interactivo'
