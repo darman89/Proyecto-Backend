@@ -20,5 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     path('content/', include('interactive_content.urls')),
-    # path('activities/', include('activities.urls')),
+    path('activities/', include('activities.urls')),
 ]
