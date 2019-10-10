@@ -12,5 +12,6 @@ router.register(r'cursos', CursoViewSet, base_name='cursos')
 urlpatterns = [
     path('', include(router.urls)),
     url(r'^recursos/$', views.contents_view, name='resources'),
-    url(r'^cursos/$', views.courses_view, name='resources')
+    url(r'^cursos/$', views.courses_view, name='resources'),
+    url(r'^generate-content/', views.ContentCreator.as_view(), name='create_content'),
 ]
