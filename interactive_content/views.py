@@ -1,5 +1,4 @@
 # Create your views here.
-from datetime import datetime
 
 from django.db.models import Subquery
 from django.http import JsonResponse
@@ -12,6 +11,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
+
 from interactive_content.models import Contenido, Curso, ContenidoInteractivo
 from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer
 
@@ -38,14 +38,10 @@ def set_contents(resources, user_id):
     # Verificar que el docente sea el propietario del curso
     contenido_id = resources['contenido']
     cursos_ids = resources['cursos']
-    get_object_or_404(Contenido, profesor_id=user_id, pk=contenido_id)
-    objetos = (ContenidoInteractivo(tiene_retroalimentacion=True,
-                                    tiempo_disponibilidad=datetime.now(),
-                                    contenido_id=contenido_id,
-                                    curso_id=i
-                                    ) for i in cursos_ids)
-    ContenidoInteractivo.objects.bulk_create(objetos)
-    return JsonResponse(resources)
+    ci = get_object_or_404(ContenidoInteractivo.objects.filter(contenido__profesor_id=user_id, pk=contenido_id))
+    objetos = Curso.objects.filter(profesor_id=user_id, pk__in=cursos_ids).get()
+    ci.curso.add(objetos)
+    return JsonResponse({'status': 'success'})
 
 
 # Verificar que solo sea un usuario profesor el que acceda a este endpoint
@@ -101,7 +97,7 @@ class CursoViewSet(viewsets.ModelViewSet):
 class ContentCreator(APIView):
     def post(self, request, *args, **kwargs):
         new_content_data = request.data
-        courses = new_content_data.pop('cursos_seleccionados',None)
+        courses = new_content_data.pop('cursos_seleccionados', None)
         contenido = Contenido.objects.Create(profesor=request.user, **new_content_data)
         if courses:
             interactive_content = ContenidoInteractivo.objects.create(contenido=contenido,
