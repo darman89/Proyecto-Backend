@@ -29,6 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+CORS_ORIGIN_ALLOW_ALL=True
 # Application definition
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -45,7 +46,10 @@ INSTALLED_APPS = [
     'django_filters',
     'activities',
     'interactive_content',
-    'users'
+    'users',
+    'rest_framework',
+    'django_filters',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +86,9 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-DATABASES = {'default': dj_database_url.config()}
+DATABASES = {
+    'default': {}
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -132,3 +138,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 django_heroku.settings(locals())
 # sslmode issue workaround
 # del DATABASES['default']['OPTIONS']['sslmode']
+
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 10,
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),    
+}

@@ -1,3 +1,5 @@
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 # Create your views here.
 
 from django.db.models import Subquery
@@ -125,3 +127,20 @@ class ContentCreator(APIView):
                 course_obj = Curso.objects.get(pk=selected_course['id'], profesor=request.user)
                 interactive_content.curso.add(course_obj)
         return Response(status=status.HTTP_201_CREATED)
+
+class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    # queryset usado para retornar los objetos requeridos
+    queryset = ContenidoInteractivo.objects.all()
+    # clase serializer para la transformacion de datos del request
+    serializer_class = ContInteractivoSerializer
+
+    def perform_create(self, serializer):
+        contenido = get_object_or_404(
+            Contenido, id=self.request.data.get('contenido'))
+        return serializer.save(contenido=contenido)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, *kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
