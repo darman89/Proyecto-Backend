@@ -46,7 +46,7 @@ class Respuestmultiple(models.Model):
 class RespuestmultipleEstudiante(models.Model):
     seleccionada = models.BooleanField()
     estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-    preguntaSeleccionMultiple = models.ForeignKey(Pregunta, on_delete=models.CASCADE)
+    respuestmultiple = models.ForeignKey(Respuestmultiple, on_delete=models.CASCADE)
 
 
 class RespuestaAbiertaEstudiante(models.Model):
@@ -71,4 +71,4 @@ class RespuestaEstudianteVoF(models.Model):
     nota = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.respuesta
+        return str(self.respuesta)
