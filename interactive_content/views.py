@@ -39,8 +39,9 @@ def set_contents(resources, user_id):
     contenido_id = resources['contenido']
     cursos_ids = resources['cursos']
     ci = get_object_or_404(ContenidoInteractivo.objects.filter(contenido__profesor_id=user_id, pk=contenido_id))
-    objetos = Curso.objects.filter(profesor_id=user_id, pk__in=cursos_ids).get()
-    ci.curso.add(objetos)
+    objetos = Curso.objects.filter(profesor_id=user_id, pk__in=cursos_ids)
+    objetos = list(objetos)
+    ci.curso.add(*objetos)
     return JsonResponse({'status': 'success'})
 
 
