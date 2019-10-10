@@ -65,7 +65,7 @@ def contents_view(request):
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def courses_view(request, content_id):
+def courses_content_view(request, content_id):
     # Tomando información del usuario
     user_id = request.user.id
     # Verificar que el docente tenga contenido creado
@@ -90,9 +90,27 @@ def courses_view(request, content_id):
         return response
 
 
-class CursoViewSet(viewsets.ModelViewSet):
-    queryset = Curso.objects.all()
-    serializer_class = CursoSerializer
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def courses_view(request):
+    # Tomando información del usuario
+    user_id = request.user.id
+
+    try:
+        # Recuperar el contenido que creó el profesor
+        contents_list = Curso.objects.filter(profesor_id=user_id).filter()
+    except (KeyError, Curso.DoesNotExist):
+        # devolver vacio si no existe contenido creado por el usuario
+        return JsonResponse({})
+    else:
+        # Devolver los resultados de la consulta en formato JSON
+        serializer_class = CursoSerializer(contents_list, many=True)
+        response = Response(serializer_class.data, status=status.HTTP_200_OK)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = "application/json"
+        response.renderer_context = {}
+        return response
 
 
 class ContentCreator(APIView):
