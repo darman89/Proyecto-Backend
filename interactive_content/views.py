@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.utils import json
-
+from rest_framework.views import APIView
 from interactive_content.models import Contenido, Curso, ContenidoInteractivo
 from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer
 
@@ -96,3 +96,17 @@ def courses_view(request, content_id):
 class CursoViewSet(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
+
+
+class ContentCreator(APIView):
+    def post(self, request, *args, **kwargs):
+        new_content_data = request.data
+        courses = new_content_data.pop('cursos_seleccionados',None)
+        contenido = Contenido.objects.Create(profesor=request.user, **new_content_data)
+        if courses:
+            interactive_content = ContenidoInteractivo.objects.create(contenido=contenido,
+                                                                      tiene_retroalimentacion=False)
+            for selected_course in courses:
+                course_obj = Curso.objects.get(pk=selected_course['id'], profesor=request.user)
+                interactive_content.curso.add(course_obj)
+        return Response(status=status.HTTP_201_CREATED)
