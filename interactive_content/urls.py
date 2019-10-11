@@ -6,7 +6,6 @@ app_name = 'interactiveContent'
 
 
 urlpatterns = [
-    url(r'^recursos/$', views.contents_view, name='resources'),
     url(r'^courses/$', views.courses_view, name='resources'),
     url(r'^generate-content/', views.ContentCreator.as_view(), name='create_content'),
     url(r'^interactive_content/$', views.contents_view, name='interactive_content'),
