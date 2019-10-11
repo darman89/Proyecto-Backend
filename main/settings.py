@@ -29,7 +29,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -42,14 +42,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
-    'django_filters',
+    'rest_framework.authtoken',    
     'activities',
     'interactive_content',
     'users',
-    'rest_framework',
-    'django_filters',
-    'corsheaders'
+    'django_filters',    
 ]
 
 MIDDLEWARE = [
@@ -87,7 +84,9 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 DATABASES = {
-    'default': {}
+    'default': {
+
+    }
 }
 
 # Password validation
@@ -141,5 +140,5 @@ django_heroku.settings(locals())
 
 REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),    
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
 }
