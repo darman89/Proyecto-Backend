@@ -118,7 +118,7 @@ class ContentCreator(APIView):
     def post(self, request, *args, **kwargs):
         new_content_data = request.data
         courses = new_content_data.pop('cursos_seleccionados', None)
-        contenido = Contenido.objects.Create(profesor=request.user, **new_content_data)
+        contenido = Contenido.objects.create(profesor=request.user, **new_content_data)
         if courses:
             interactive_content = ContenidoInteractivo.objects.create(contenido=contenido,
                                                                       tiene_retroalimentacion=False)
