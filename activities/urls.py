@@ -10,5 +10,5 @@ urlpatterns = [
     path('pregunta', PreguntaView.as_view(), name='pregunta'),
     path('resp_op_multiple', RespMultipleView.as_view(), name='respuesta_op_multiple'),
     path('resp_estudiante_op_multiple', RespEstudianteMultipleView.as_view(), name='respuesta_estd_op_multiple'),
-    path('reports/', reports, name='reports'),
+    path('reports/<int:contentpk>', reports, name='reports'),
 ]

@@ -8,13 +8,23 @@ from activities.serializers import MarcaSerializer, ActividadSerializer, Respues
 from interactive_content.models import ContenidoInteractivo
 from users.models import Profesor
 from django.http import HttpResponseNotFound
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.renderers import JSONRenderer
+from rest_framework.response import Response
+from rest_framework.utils import json
+from rest_framework.views import APIView
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 
 from .models import Marca, Actividad, Pregunta, RespuestaEstudianteVoF, RespuestmultipleEstudiante, Respuestmultiple, RespuestaVoF
 
 # Create your views here.
-@csrf_exempt
-def reports(request):
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def reports(request,contentpk):
 
     #Get correct professor through token or session
     try:
@@ -32,10 +42,12 @@ def reports(request):
     big_json['facultad'] = get_the_professor.facultad
     big_json['marcas'] = []
 
-    marcas = Marca.objects.filter(contenido__contenido__profesor=get_the_professor)
+    contenidos_interactivos = ContenidoInteractivo.objects.filter(contenido__profesor=get_the_professor, contenido_id__exact=contentpk)
+    marcas = Marca.objects.filter(contenido__in=contenidos_interactivos)
+
     for marca in marcas:
 
-        big_json['marcas'].append({'nombre':marca.nombre,'actividades':[]})
+        big_json['marcas'].append({'nombre':marca.nombre,'contenido_interactivo':marca.contenido.pk,'actividades':[]})
         actividades = Actividad.objects.filter(marca=marca)
 
         for actividad in actividades:
@@ -45,23 +57,29 @@ def reports(request):
 
             for pregunta in preguntas:
 
-                big_json['marcas'][-1]['actividades'][-1]['preguntas'].append({'pregunta':pregunta.Pregunta, 'tipo':'', 'opciones':[]})
+                big_json['marcas'][-1]['actividades'][-1]['preguntas'].append({'pregunta':pregunta.Pregunta, 'tipo':'', 'total_respuestas':0,'opciones':[]})
                 opciones = Respuestmultiple.objects.filter(preguntaSeleccionMultiple=pregunta)
 
                 if opciones.count() != 0:
                     big_json['marcas'][-1]['actividades'][-1]['preguntas'][-1]['tipo'] = 'multiple'
+                    cont = 0
                     for opcion in opciones:
                         votos = RespuestmultipleEstudiante.objects.filter(respuestmultiple=opcion).count()
+                        cont+=votos
                         big_json['marcas'][-1]['actividades'][-1]['preguntas'][-1]['opciones'].append({'respuesta':opcion.respuesta, 'esCorrecta': opcion.esCorrecta, 'votos':votos})
+                    big_json['marcas'][-1]['actividades'][-1]['preguntas'][-1]['total_respuestas'] = cont    
                 else:
                     big_json['marcas'][-1]['actividades'][-1]['preguntas'][-1]['tipo'] = 'verdadero/falso'
                     VF = RespuestaVoF.objects.filter(preguntaVoF=pregunta)
+                    total_vf = 0
                     for vf in VF:
                         isCorrect = vf.esCorrecta
                         howManyTrue = RespuestaEstudianteVoF.objects.filter(preguntaVoF=vf, respuesta=True).count() #"howTrue":value
                         howManyFalse = RespuestaEstudianteVoF.objects.filter(preguntaVoF=vf, respuesta=False).count() #"howFalse":value
                         big_json['marcas'][-1]['actividades'][-1]['preguntas'][-1]['opciones'].append(
                             {'respuesta': vf.esCorrecta, 'numeroVerdadero': howManyTrue, 'numeroFalso': howManyFalse})
+                        total_vf += howManyTrue + howManyFalse
+                    big_json['marcas'][-1]['actividades'][-1]['preguntas'][-1]['total_respuestas'] = total_vf
 
     return JsonResponse(big_json)
 
