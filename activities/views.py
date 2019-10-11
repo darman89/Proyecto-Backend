@@ -125,7 +125,7 @@ class RespEstudianteMultipleView(ListModelMixin, CreateModelMixin, GenericAPIVie
     # permission_classes = [IsAuthenticated]
 
     # Add filter fields for the API
-    filterset_fields = ("estudiante", "preguntaSeleccionMultiple")
+    filterset_fields = ("estudiante", "respuestmultiple")
 
     # queryset usado para retornar los objetos requeridos
     def get_queryset(self):
