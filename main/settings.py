@@ -27,9 +27,8 @@ SECRET_KEY = 'pn_-msnzco)&duo0i_p=o7ge764jur3dc=tuaf_#x)bq3v@6_$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
-CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -46,7 +45,7 @@ INSTALLED_APPS = [
     'activities',
     'interactive_content',
     'users',
-    'django_filters',    
+    'django_filters'
 ]
 
 MIDDLEWARE = [
