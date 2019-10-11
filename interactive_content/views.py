@@ -115,10 +115,13 @@ def courses_view(request):
 
 
 class ContentCreator(APIView):
+    authentication_classes = (TokenAuthentication,)
+
     def post(self, request, *args, **kwargs):
         new_content_data = request.data
         courses = new_content_data.pop('cursos_seleccionados', None)
-        contenido = Contenido.objects.create(profesor=request.user, **new_content_data)
+        user_with_roll = request.user.get_real_instance()
+        contenido = Contenido.objects.create(profesor=user_with_roll, **new_content_data)
         if courses:
             interactive_content = ContenidoInteractivo.objects.create(contenido=contenido,
                                                                       tiene_retroalimentacion=False)
