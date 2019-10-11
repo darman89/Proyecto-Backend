@@ -1,18 +1,14 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-
-from activities.serializers import MarcaSerializer, ActividadSerializer, RespuestaMultipleEstudianteSerializer, PreguntaSerializer, RespuestaMultipleSerializer
+from activities.serializers import MarcaSerializer, ActividadSerializer, RespuestaMultipleEstudianteSerializer,\
+    PreguntaSerializer, RespuestaMultipleSerializer
 from interactive_content.models import ContenidoInteractivo
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
-
-from activities.models import Marca, Actividad, RespuestmultipleEstudiante, Pregunta, Respuestmultiple
 from users.models import Profesor
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
-from django.core import serializers
+from django.http import HttpResponseNotFound
+
 
 from .models import Marca, Actividad, Pregunta, RespuestaEstudianteVoF, RespuestmultipleEstudiante, Respuestmultiple, RespuestaVoF
 

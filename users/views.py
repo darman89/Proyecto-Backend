@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from rest_framework.authtoken.models import Token
@@ -9,7 +8,7 @@ from rest_framework import parsers, renderers
 from rest_framework.authtoken.serializers import AuthTokenSerializer
 from users.models import Profesor
 from users.serializers import ProfesorSerializer, EstudianteSerializer
-from django.contrib.auth import user_logged_in, authenticate
+from django.contrib.auth import user_logged_in
 
 
 # Create your views here.

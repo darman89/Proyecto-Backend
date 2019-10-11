@@ -1,7 +1,3 @@
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
-# Create your views here.
-
 from django.db.models import Subquery
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -13,7 +9,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
-
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from interactive_content.models import Contenido, Curso, ContenidoInteractivo
 from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer
 
@@ -133,7 +130,7 @@ class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # queryset usado para retornar los objetos requeridos
     queryset = ContenidoInteractivo.objects.all()
     # clase serializer para la transformacion de datos del request
-    serializer_class = ContInteractivoSerializer
+    serializer_class = ContenidoInteractivoSerializer
 
     def perform_create(self, serializer):
         contenido = get_object_or_404(
