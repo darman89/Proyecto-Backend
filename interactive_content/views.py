@@ -5,7 +5,7 @@ from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from django.db.models import Subquery
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -77,7 +77,8 @@ def courses_content_view(request, content_id):
         if not contents:
             contents_list = Curso.objects.filter(profesor_id=user_id)
         else:
-            contents_list = Curso.objects.filter(profesor_id=user_id).exclude(pk=Subquery(contents.values('curso_id')))
+            contents_list = Curso.objects.filter(profesor_id=user_id).exclude(
+                pk__in=Subquery(contents.values('curso_id')))
 
     except (KeyError, Curso.DoesNotExist):
         # devolver vacio si no existe contenido creado por el usuario
