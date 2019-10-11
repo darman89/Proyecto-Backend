@@ -23,7 +23,7 @@ class ActividadSerializer(serializers.ModelSerializer):
 class RespuestaMultipleEstudianteSerializer(serializers.ModelSerializer):
     class Meta:
         model = RespuestmultipleEstudiante
-        fields = ('id', 'seleccionada', 'estudiante', 'preguntaSeleccionMultiple')
+        fields = ('id', 'seleccionada', 'estudiante', 'respuestmultiple')
 
     def create(self, validated_data):
         return RespuestmultipleEstudiante.objects.create(**validated_data)
