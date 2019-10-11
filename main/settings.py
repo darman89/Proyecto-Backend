@@ -83,11 +83,15 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+<<<<<<< HEAD
 DATABASES = {
     'default': {
 
     }
 }
+=======
+DATABASES = {'default': dj_database_url.config()}
+>>>>>>> 75df5e0ef118c9de68c923da7b8dc76fca65f1ec
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
