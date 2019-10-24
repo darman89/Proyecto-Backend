@@ -18,6 +18,7 @@ class Actividad(models.Model):
     numeroDeIntentos = models.IntegerField(default=0)
     tieneRetroalimentacion = models.BooleanField()
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    retroalimentacion = models.CharField(max_length=200, null=True)
 
     def __str__(self):
         return self.nombre
@@ -62,8 +63,8 @@ class Opcionmultiple(models.Model):
 
 
 class RespuestmultipleEstudiante(Respuesta):
-    respuestmultiple = models.ManyToManyField(
-        Opcionmultiple)
+    respuestmultiple = models.ForeignKey(
+        Opcionmultiple, on_delete=models.SET_NULL)
 
 
 class RespuestaAbiertaEstudiante(Respuesta):
