@@ -1,7 +1,7 @@
 from django.urls import path
-from activities import views
+from activities.views import CalificarAPI
 app_name = 'activities'
 
 urlpatterns = [
-    path('calificacion', views.list_calificacion, name='calificacion'),
+    path('calificacion', CalificarAPI.as_view(), name='calificacion'),
 ]

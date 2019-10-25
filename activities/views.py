@@ -1,10 +1,13 @@
-from django.http import HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.core import serializers
+from rest_framework.generics import ListCreateAPIView
 
+from activities.serializers import CalificacionSerializer
 from activities.models import Calificacion
 
-@csrf_exempt
-def list_calificacion(request):
-    calificaciones = []
-    return HttpResponse(serializers.serialize('json', calificaciones))
+
+class CalificarAPI(ListCreateAPIView):
+    # serializer usado para la transformacion de datos
+    serializer_class = CalificacionSerializer
+
+    def get_queryset(self):
+        # queryset para retornar las calificaciones de un estudiante
+        return Calificacion.objects.all()
