@@ -64,7 +64,7 @@ class Opcionmultiple(models.Model):
 
 class RespuestmultipleEstudiante(Respuesta):
     respuestmultiple = models.ForeignKey(
-        Opcionmultiple, on_delete=models.SET_NULL)
+        Opcionmultiple, null=True,on_delete=models.SET_NULL)
 
 
 class RespuestaAbiertaEstudiante(Respuesta):

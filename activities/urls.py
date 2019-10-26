@@ -1,5 +1,4 @@
-# from activities.views import MarcaView, ActividadView, RespEstudianteMultipleView, PreguntaView, RespMultipleView, \
-#     reports
+from activities.views import *
 from django.urls import path
 
 app_name = 'marca'
@@ -7,7 +6,7 @@ app_name = 'marca'
 urlpatterns = [
     # path('marca', MarcaView.as_view(), name='marca'),
     # path('actividad', ActividadView.as_view(), name='actividad'),
-    # path('pregunta', PreguntaView.as_view(), name='pregunta'),
+    path('preguntaOpcionMultiple/<int:pk>/', DetailPreguntaSeleccionMultiple.as_view())
     # path('resp_op_multiple', RespMultipleView.as_view(), name='respuesta_op_multiple'),
     # path('resp_estudiante_op_multiple', RespEstudianteMultipleView.as_view(), name='respuesta_estd_op_multiple'),
     # path('reports/', reports, name='reports'),
