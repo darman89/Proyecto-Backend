@@ -6,7 +6,8 @@ app_name = 'marca'
 urlpatterns = [
     # path('marca', MarcaView.as_view(), name='marca'),
     # path('actividad', ActividadView.as_view(), name='actividad'),
-    path('preguntaOpcionMultiple/<int:pk>/', DetailPreguntaSeleccionMultiple.as_view())
+    path('preguntaOpcionMultiple/<int:pk>/', DetailPreguntaSeleccionMultiple.as_view()),
+    path('respuestaOpcionMultiple', DetailPreguntaSeleccionMultiple.as_view())
     # path('resp_op_multiple', RespMultipleView.as_view(), name='respuesta_op_multiple'),
     # path('resp_estudiante_op_multiple', RespEstudianteMultipleView.as_view(), name='respuesta_estd_op_multiple'),
     # path('reports/', reports, name='reports'),

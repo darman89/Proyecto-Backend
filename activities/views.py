@@ -4,7 +4,7 @@ from rest_framework import generics, permissions, serializers, viewsets
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
-from activities.serializers import PreguntaSeleccionMultipleSerializer
+from activities.serializers import PreguntaSeleccionMultipleSerializer, RespuestaSeleccionMultipleSerializer
 
 #     PreguntaSerializer, RespuestaMultipleSerializer
 # from interactive_content.models import ContenidoInteractivo
@@ -172,6 +172,31 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
      def post(self, request, *args, **kwargs):
          return self.create(request, *args, **kwargs)
+
+
+class RespuestaSleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    # Add permissions to the view
+    # permission_classes = [IsAuthenticated]
+
+    # Add filter fields for the API
+    filterset_fields = ("actividad",)
+    # clase serializer para la transformacion de datos del request
+    serializer_class = RespuestaSeleccionMultipleSerializer
+
+    # def get_queryset(self):
+    # actividad = self.request.query_params.get('actividad')
+    # return PreguntaOpcionMultiple.objects.filter(actividad=actividad)
+
+    def perform_create(self, serializer):
+        # actividad = get_object_or_404(
+        #    Actividad, id=self.request.data.get('actividad'))
+        return serializer.save()
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, *kwargs)
+
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 # 
 # 
 # class RespMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
