@@ -88,7 +88,7 @@ class PortafolioTestCase(TestCase):
         estudiante1 = Estudiante.objects.create(
             username='esrudiante', password='estudiante123')
         estudiante2 = Estudiante.objects.create(
-            username='esrudiant2', password='estudiante123')
+            username='esrudiante2', password='estudiante123')
         calificacion1 = Calificacion.objects.create(
             estudiante=estudiante1, actividad=pregunta, calificacion=4.5)
         calificacion2 = Calificacion.objects.create(
@@ -96,7 +96,7 @@ class PortafolioTestCase(TestCase):
         calificacion3 = Calificacion.objects.create(
             estudiante=estudiante1, actividad=pregunta2, calificacion=5.0)
 
-        url = '/activities/calificacion?pregunta=1'
+        url = '/activities/calificacion?actividad=2'
         response = self.client.get(url, format='json')
         current_data = json.loads(response.content)
         self.assertEqual(len(current_data), 2)
