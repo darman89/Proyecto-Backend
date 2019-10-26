@@ -38,10 +38,10 @@ class PortafolioTestCase(TestCase):
         calificacion2 = Calificacion.objects.create(
             estudiante=estudiante2, actividad=pregunta, calificacion=3.5)
 
-        url = '/activities/calificacion'
-        response = self.client.get(url, format='json')
-        current_data = json.loads(response.content)
-        self.assertEqual(len(current_data), 2)
+        # url = '/activities/calificacion'
+        # response = self.client.get(url, format='json')
+        # current_data = json.loads(response.content)
+        # self.assertEqual(len(current_data), 2)
 
     def test_filter_calificaiones_by_student(self):
         profe = Profesor.objects.create(

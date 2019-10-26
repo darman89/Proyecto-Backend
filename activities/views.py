@@ -5,11 +5,16 @@ from activities.models import Calificacion
 
 
 class CalificarAPI(ListCreateAPIView):
+    # Add filter fields for the API
+    filterset_fields = ("estudiante", "actividad")
     # serializer usado para la transformacion de datos
     serializer_class = CalificacionSerializer
-    # filtro de estudiante
-    filterset_fields = ("estudiante", "actividad")
 
+    # queryset para retornar las calificaciones de un estudiante
     def get_queryset(self):
-        # queryset para retornar las calificaciones de un estudiante
-        return Calificacion.objects.all()
+        student = self.request.query_params.get('estudiante', None)
+        activity = self.request.query_params.get('actividad', None)
+        if (student):
+            return Calificacion.objects.filter(estudiante=student)
+        if (activity):
+            return Calificacion.objects.filter(actividad=activity)
