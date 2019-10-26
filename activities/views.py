@@ -65,7 +65,8 @@ class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAP
         # valida si el intento de la respuesta es menor o igual al max de intentos permitidos
         if self.request.data['intento'] <= pregunta.numeroDeIntentos:
             serializer = self.get_serializer(data=request.data)
-            return serializer.save()
+            if serializer.is_valid():
+                return serializer.save()
         else:
             msj = {'max_attemps': 'Número de intentos maximos excedido'}
             return Response(msj, status=status.HTTP_406_NOT_ACCEPTABLE)
