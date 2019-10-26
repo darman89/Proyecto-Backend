@@ -174,12 +174,11 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
          return self.create(request, *args, **kwargs)
 
 
-class RespuestaSleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
+class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # Add permissions to the view
     # permission_classes = [IsAuthenticated]
 
-    # Add filter fields for the API
-    filterset_fields = ("actividad",)
+
     # clase serializer para la transformacion de datos del request
     serializer_class = RespuestaSeleccionMultipleSerializer
 
@@ -188,6 +187,7 @@ class RespuestaSleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPI
     # return PreguntaOpcionMultiple.objects.filter(actividad=actividad)
 
     def perform_create(self, serializer):
+
         # actividad = get_object_or_404(
         #    Actividad, id=self.request.data.get('actividad'))
         return serializer.save()
