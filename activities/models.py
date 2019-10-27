@@ -59,7 +59,7 @@ class Opcionmultiple(models.Model):
     opcion = models.CharField(max_length=200)
     esCorrecta = models.BooleanField()
     preguntaSeleccionMultiple = models.ForeignKey(
-        PreguntaOpcionMultiple, on_delete=models.CASCADE)
+        PreguntaOpcionMultiple, on_delete=models.CASCADE, related_name='opciones')
 
 
 class RespuestmultipleEstudiante(Respuesta):
