@@ -11,10 +11,16 @@ from activities.serializers import PreguntaSeleccionMultipleSerializer, Califica
 from activities.models import Calificacion, PreguntaOpcionMultiple, RespuestmultipleEstudiante, Opcionmultiple, Marca
 
 
-class DetailPreguntaSeleccionMultiple(generics.RetrieveUpdateDestroyAPIView):
-    queryset = PreguntaOpcionMultiple.objects.all()
+class DetailPreguntaSeleccionMultiple(generics.RetrieveUpdateDestroyAPIView, ListModelMixin):
     serializer_class = PreguntaSeleccionMultipleSerializer
+    lookup_url_kwarg = "marca"
 
+    def get_queryset(self):
+        marca = self.kwargs.get(self.lookup_url_kwarg)
+        return PreguntaOpcionMultiple.objects.filter(marca=marca)
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, *kwargs)
 
 class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # Add permissions to the view
@@ -26,7 +32,7 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
     serializer_class = PreguntaSeleccionMultipleSerializer
 
     # def get_queryset(self):
-    #actividad = self.request.query_params.get('actividad')
+    # actividad = self.request.query_params.get('actividad')
     # return PreguntaOpcionMultiple.objects.filter(actividad=actividad)
 
     def perform_create(self, serializer):
