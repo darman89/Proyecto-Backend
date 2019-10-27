@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
 
-from activities.serializers import PreguntaSeleccionMultipleSerializer, CalificacionSerializer, RespuestaSeleccionMultipleSerializer
-from activities.models import Calificacion, PreguntaOpcionMultiple, RespuestmultipleEstudiante, Opcionmultiple
+from activities.serializers import PreguntaSeleccionMultipleSerializer, CalificacionSerializer, RespuestaSeleccionMultipleSerializer, MarcaSerializer
+from activities.models import Calificacion, PreguntaOpcionMultiple, RespuestmultipleEstudiante, Opcionmultiple, Marca
 
 
 class DetailPreguntaSeleccionMultiple(generics.RetrieveUpdateDestroyAPIView):
@@ -41,11 +41,7 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
         return self.create(request, *args, **kwargs)
 
 
-class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
-    # Add permissions to the view
-    # permission_classes = [IsAuthenticated]
-
-    queryset = RespuestmultipleEstudiante.objects.all()
+class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):   
     # clase serializer para la transformacion de datos del request
     serializer_class = RespuestaSeleccionMultipleSerializer
 
@@ -86,3 +82,16 @@ class CalificarAPI(ListCreateAPIView):
             return Calificacion.objects.filter(estudiante=student)
         if (activity):
             return Calificacion.objects.filter(actividad=activity)
+
+
+class MarcaApi(ListModelMixin, GenericAPIView):        
+    serializer_class = MarcaSerializer
+
+    def get_queryset(self):
+        content = self.request.query_params.get('contenido', None)
+        return Marca.objects.filter(contenido=content)
+    
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, *kwargs)
+    
+    
