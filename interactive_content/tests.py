@@ -28,3 +28,15 @@ class InteractiveContentTestCase(TestCase):
         current_data = json.loads(response.content)
         self.assertEqual(len(current_data), 1)
         self.assertEqual(current_data[0]['nombre'], content.nombre)
+
+    def test_lista_contenido_dos_elementos(self):
+        url = '/content/content/'
+        self.client.force_login(user=self.user)
+        content_1 = Contenido.objects.create(nombre="Contenido Prueba 2", url="https://youtube/test2", profesor=self.user)
+        content_2 = Contenido.objects.create(nombre="Contenido Prueba 3", url="https://youtube/test3", profesor=self.user)
+        response = self.client.get(url, format='json', HTTP_AUTHORIZATION='Token ' + self.token.key)
+        current_data = json.loads(response.content)
+        self.assertEqual(len(current_data), 2)
+        print(current_data)
+        self.assertEqual(current_data[0]['nombre'], content_2.nombre)
+        self.assertEqual(current_data[1]['nombre'], content_1.nombre)
