@@ -20,7 +20,6 @@ class InteractiveContentTestCase(TestCase):
         response = self.client.get(url, format='json', HTTP_AUTHORIZATION='Token ' + self.token.key)
         self.assertEqual(response.status_code, 200)
 
-
     def test_lista_contenido_un_elemento(self):
         url = '/content/content/'
         self.client.force_login(user=self.user)
