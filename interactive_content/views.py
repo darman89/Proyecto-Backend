@@ -112,6 +112,14 @@ def courses_view(request):
         response.renderer_context = {}
         return response
 
+    @api_view(['GET'])
+    @authentication_classes([TokenAuthentication])
+    @permission_classes([IsAuthenticated])
+
+    def contents_view(request):
+
+        return JsonResponse({})
+
 
 class ContentCreator(APIView):
     authentication_classes = (TokenAuthentication,)
@@ -128,6 +136,7 @@ class ContentCreator(APIView):
                 course_obj = Curso.objects.get(pk=selected_course['id'], profesor=request.user)
                 interactive_content.curso.add(course_obj)
         return Response(status=status.HTTP_201_CREATED)
+
 
 class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # queryset usado para retornar los objetos requeridos
