@@ -115,7 +115,6 @@ def courses_view(request):
     @api_view(['GET'])
     @authentication_classes([TokenAuthentication])
     @permission_classes([IsAuthenticated])
-
     def contents_view(request):
 
         return JsonResponse({})
@@ -136,6 +135,13 @@ class ContentCreator(APIView):
                 course_obj = Curso.objects.get(pk=selected_course['id'], profesor=request.user)
                 interactive_content.curso.add(course_obj)
         return Response(status=status.HTTP_201_CREATED)
+
+
+    @api_view(['GET'])
+    @authentication_classes([TokenAuthentication])
+    @permission_classes([IsAuthenticated])
+    def contents_view(request):
+        return JsonResponse({})
 
 
 class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
