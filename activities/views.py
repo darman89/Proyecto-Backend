@@ -48,6 +48,7 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
 
 
 class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):   
+    queryset = RespuestmultipleEstudiante.objects.all()
     # clase serializer para la transformacion de datos del request
     serializer_class = RespuestaSeleccionMultipleSerializer
 
@@ -68,7 +69,8 @@ class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAP
         if self.request.data['intento'] <= pregunta.numeroDeIntentos:
             serializer = self.get_serializer(data=request.data)
             if serializer.is_valid():
-                return serializer.save()
+                resp = {'OK': 'Answer Saved'}
+                return Response(resp, status=status.HTTP_201_CREATED)
         else:
             msj = {'max_attemps': 'Número de intentos maximos excedido'}
             return Response(msj, status=status.HTTP_406_NOT_ACCEPTABLE)
