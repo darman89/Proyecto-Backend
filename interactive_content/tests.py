@@ -38,6 +38,7 @@ class InteractiveContentTestCase(TestCase):
                                              profesor=self.user)
         response = self.client.get(url, format='json', HTTP_AUTHORIZATION='Token ' + self.token.key)
         current_data = json.loads(response.content)
-        self.assertEqual(len(current_data), 1)
+        self.assertEqual(len(current_data), 2)
         print(current_data)
         self.assertEqual(current_data[0]['nombre'], content_2.nombre)
+        self.assertEqual(current_data[1]['nombre'], content_1.nombre)
