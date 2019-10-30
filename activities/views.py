@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import status
 from rest_framework.response import Response
+from django.http import JsonResponse
 
 from activities.serializers import PreguntaSeleccionMultipleSerializer, CalificacionSerializer, RespuestaSeleccionMultipleSerializer, MarcaSerializer
 from activities.models import Calificacion, PreguntaOpcionMultiple, RespuestmultipleEstudiante, Opcionmultiple, Marca
@@ -111,3 +112,28 @@ class MarcaApi(ListModelMixin, GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, *kwargs)
+
+
+def intentos_max(request):
+    if request.method == 'GET':
+        pregunta = request.GET.get('id_pregunta')        
+        estudiante = request.GET.get('id_estudiante')        
+        opciones = Opcionmultiple.objects.filter(
+            preguntaSeleccionMultiple=pregunta)
+
+        respuestas = RespuestmultipleEstudiante.objects.filter(
+            estudiante=estudiante)
+        resps = []
+
+        for respuesta in respuestas:
+            for opcion in opciones:
+                if respuesta.respuestmultiple == opcion:
+                    print('ALGO')
+                    if respuesta.intento:
+                        resps.append(respuesta.intento)
+        if len(resps) > 0:
+            max_int = max(resps)
+        else: max_int = 0
+
+        print(max_int)
+        return JsonResponse({'ultimo_intento': max_int}, status=status.HTTP_200_OK)
