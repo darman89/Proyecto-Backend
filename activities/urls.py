@@ -1,6 +1,6 @@
 from activities.views import *
 from django.urls import path
-from activities.views import CalificarAPI, MarcaApi
+from activities.views import CalificarAPI, MarcaApi, intentos_max
 app_name = 'activities'
 
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path('preguntaOpcionMultiple/<int:marca>/', DetailPreguntaSeleccionMultiple.as_view()),
     path('calificacion', CalificarAPI.as_view(), name='calificacion'),
     path('marca', MarcaApi.as_view(), name='marca'),
+    path('ultimo_intento', intentos_max)
 ]
