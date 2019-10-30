@@ -22,6 +22,7 @@ class DetailPreguntaSeleccionMultiple(generics.RetrieveUpdateDestroyAPIView, Lis
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, *kwargs)
 
+
 class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
     # Add permissions to the view
     # permission_classes = [IsAuthenticated]
@@ -47,7 +48,7 @@ class PreguntaView(ListModelMixin, CreateModelMixin, GenericAPIView):
         return self.create(request, *args, **kwargs)
 
 
-class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):   
+class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAPIView):
     queryset = RespuestmultipleEstudiante.objects.all()
     # clase serializer para la transformacion de datos del request
     serializer_class = RespuestaSeleccionMultipleSerializer
@@ -62,18 +63,27 @@ class RespuestaSeleccionMultipleView(ListModelMixin, CreateModelMixin, GenericAP
         return self.create(request, *args, **kwargs)
 
     def create(self, request, *args, **kwargs):
-        opcion = Opcionmultiple.objects.filter(
-            id=self.request.data['respuestmultiple'])
-        pregunta = opcion[0].preguntaSeleccionMultiple
-        # valida si el intento de la respuesta es menor o igual al max de intentos permitidos
-        if self.request.data['intento'] <= pregunta.numeroDeIntentos:
-            serializer = self.get_serializer(data=request.data)
-            if serializer.is_valid():
-                resp = {'OK': 'Answer Saved'}
-                return Response(resp, status=status.HTTP_201_CREATED)
+         # Validacion de respuesta en blanco (null)
+        if self.request.data['respuestmultiple']:
+            opcion = Opcionmultiple.objects.filter(
+                id=self.request.data['respuestmultiple'])
+            pregunta = opcion[0].preguntaSeleccionMultiple
+            # valida si el intento de la respuesta es menor o igual al max de intentos permitidos
+            if int(self.request.data['intento']) <= pregunta.numeroDeIntentos:
+                serializer = self.get_serializer(data=request.data)
+                serializer.is_valid(raise_exception=True)
+                self.perform_create(serializer)
+                headers = self.get_success_headers(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+            else:
+                msj = {'max_attemps': 'Número de intentos maximos excedido'}
+                return Response(msj, status=status.HTTP_406_NOT_ACCEPTABLE)
         else:
-            msj = {'max_attemps': 'Número de intentos maximos excedido'}
-            return Response(msj, status=status.HTTP_406_NOT_ACCEPTABLE)
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_create(serializer)
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class CalificarAPI(ListCreateAPIView):
@@ -92,14 +102,12 @@ class CalificarAPI(ListCreateAPIView):
             return Calificacion.objects.filter(actividad=activity)
 
 
-class MarcaApi(ListModelMixin, GenericAPIView):        
+class MarcaApi(ListModelMixin, GenericAPIView):
     serializer_class = MarcaSerializer
 
     def get_queryset(self):
         content = self.request.query_params.get('contenido', None)
         return Marca.objects.filter(contenido=content)
-    
+
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, *kwargs)
-    
-    
