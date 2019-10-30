@@ -30,8 +30,6 @@ def escenario():
 
     profesor.save()
 
-
-
     estudiante = Estudiante(codigo_de_estudiante="232223555",
                             direccion="cra 76#89-13",
                             telefono="1233323442",
@@ -44,11 +42,7 @@ def escenario():
 
     estudiante.id = 22333
 
-
     estudiante.save()
-
-
-
 
     contenido = Contenido(url="https://www.youtube.com/watch?v=FRivqBxbHRs",
                           nombre="video",
@@ -61,7 +55,6 @@ def escenario():
                   profesor=profesor
                   )
     curso.save()
-
 
     contenidoInteractivo = ContenidoInteractivo(contenido=contenido,
                                                 tiene_retroalimentacion=True,
@@ -83,7 +76,6 @@ def escenario2():
     escenario()
     marca = escenario()
 
-
     pregunta = PreguntaOpcionMultiple()
     pregunta.nombre = "pregunta1"
     pregunta.enunciado = "enunciado"
@@ -102,68 +94,72 @@ def escenario2():
     return opcion
 
 
-
 class PreguntaTestCase(TestCase):
-
-
 
     def test_Get_Pregunta(self):
 
-
-
         marca = escenario()
 
-
         pregunta = PreguntaOpcionMultiple()
-        pregunta.nombre= "pregunta1"
-        pregunta.enunciado="enunciado"
+        pregunta.nombre = "pregunta1"
+        pregunta.enunciado = "enunciado"
         pregunta.numeroDeIntentos = 1
         pregunta.tieneRetroalimentacion = True
         pregunta.esMultipleResp = True
         pregunta.marca_id = marca.id
         pregunta.save()
 
-
-        url = "/activities/preguntaOpcionMultiple"+ '/'+str(pregunta.pk)+'/'
-        response = self.client.get(url, format='json' )
+        url = "/activities/preguntaOpcionMultiple" + '/'+str(pregunta.pk)+'/'
+        response = self.client.get(url, format='json')
         print(response.context)
-        self.assertEqual(response.status_code ,200)
+        self.assertEqual(response.status_code, 200)
 
 
 class RespuestaSeleccionTestCase(TestCase):
-
-
-
     def test_guardar_Respuesta(self):
-
-
-
         opcion = escenario2()
         estudiante = Estudiante.objects.get(username="Andres1236222r")
 
         curso = Curso.objects.filter(nombre="comunicacion Oral")[0]
         grupo = Grupo(estudiante_id=estudiante.id,
-                      curso=  curso)
+                      curso=curso)
         grupo.save()
-
-
-
         url = "/activities/respuestaOpcionMultiple/"
 
-
-
-        response = self.client.post(url, { "respuestmultiple" : opcion.id,
-                                          "fecha_creacion" : "2019-10-25 23:21:51.950232",
-                                            "estudiante": estudiante.pk,
-                                          "intento": 1 ,
-                                           "curso": grupo.id
+        response = self.client.post(url, {"respuestmultiple": opcion.id,
+                                          "fecha_creacion": "2019-10-25 23:21:51.950232",
+                                          "estudiante": estudiante.pk,
+                                          "intento": 1,
+                                          "curso": grupo.id
 
                                           }
                                     )
 
         print(response.context)
         print(response.content)
-        self.assertEqual(response.status_code ,201)
+        self.assertEqual(response.status_code, 201)
+
+    def test_respuesta_vacia(self):
+        opcion = escenario2()
+        estudiante = Estudiante.objects.get(username="Andres1236222r")
+
+        curso = Curso.objects.filter(nombre="comunicacion Oral")[0]
+        grupo = Grupo(estudiante_id=estudiante.id,
+                      curso=curso)
+        grupo.save()
+        url = "/activities/respuestaOpcionMultiple/"
+
+        response = self.client.post(url, {"respuestmultiple": '',
+                                          "fecha_creacion": "2019-10-25 23:21:51.950232",
+                                          "estudiante": estudiante.pk,
+                                          "intento": 1,
+                                          "curso": grupo.id
+                                          }
+                                    )
+        
+        print(response.context)
+        print(response.content)
+        self.assertEqual(response.status_code, 201)
 
 
 class CalificacionCase(TestCase):
@@ -315,5 +311,3 @@ class CalificacionCase(TestCase):
         response = self.client.get(url, format='json')
         current_data = json.loads(response.content)
         self.assertEqual(len(current_data), 1)
-
-
