@@ -22,4 +22,4 @@ class CreateInteractiveContentTestCase(TestCase):
         response = self.client.post(url, json.dumps(interactive_content), format='json', HTTP_AUTHORIZATION='Token ' + self.token.key)
         current_data = json.loads(response.content)
         self.assertEqual(current_data['nombre'], 'test')
-        self.assertEqual(current_data['contenido'], contenido)
+        self.assertEqual(current_data['contenido']['id'], contenido.id)
