@@ -14,7 +14,7 @@ class CreateInteractiveContentTestCase(TestCase):
         self.token = Token.objects.create(user=self.user)
 
     def test_add_interactive_content(self):
-        url = '/interactive_content/create'
+        url = '/content/cont_interactivo'
         interactive_content = {"nombre": "test", "contenido_id": "1"}
         self.client.force_login(user=self.user)
         response = self.client.post(url, json.dumps(interactive_content), format='json', HTTP_AUTHORIZATION='Token ' + self.token.key)
