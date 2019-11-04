@@ -139,6 +139,7 @@ class ContentCreator(APIView):
 
 
 class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
     # queryset usado para retornar los objetos requeridos
     queryset = ContenidoInteractivo.objects.all()
     # clase serializer para la transformacion de datos del request
@@ -153,7 +154,7 @@ class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
         return self.list(request, *args, *kwargs)
 
     def post(self, request, *args, **kwargs):
-        new_content_data = json.loads(request.data)
+        new_content_data = request.data
         contenido_id = int(new_content_data['contenido'])
         user_id = request.user.id
 
