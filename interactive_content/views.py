@@ -13,10 +13,10 @@ from rest_framework.utils import json
 from rest_framework.views import APIView
 
 from interactive_content.models import Contenido, Curso, ContenidoInteractivo
-from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer
+from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer, ContenidoSerializer
 
 
-def get_contents(user_id):
+def get_interactive_contents(user_id):
     # Verificar que el docente tenga contenido creado
     try:
         # Recuperar el contenido que creó el profesor
@@ -27,6 +27,24 @@ def get_contents(user_id):
     else:
         # Devolver los resultados de la consulta en formato JSON
         serializer_class = ContenidoInteractivoSerializer(contents_list, many=True)
+        response = Response(serializer_class.data, status=status.HTTP_200_OK)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = "application/json"
+        response.renderer_context = {}
+        return response
+
+
+def get_contents(user_id):
+    # Verificar que el docente tenga contenido creado
+    try:
+        # Recuperar el contenido que creó el profesor
+        contents_list = Contenido.objects.filter(profesor_id=user_id)
+    except (KeyError, Contenido.DoesNotExist):
+        # devolver vacio si no existe contenido creado por el usuario
+        return JsonResponse({})
+    else:
+        # Devolver los resultados de la consulta en formato JSON
+        serializer_class = ContenidoSerializer(contents_list, many=True)
         response = Response(serializer_class.data, status=status.HTTP_200_OK)
         response.accepted_renderer = JSONRenderer()
         response.accepted_media_type = "application/json"
@@ -50,11 +68,11 @@ def set_contents(resources, user_id):
 @api_view(['GET', 'POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def contents_view(request):
+def interactive_contents_view(request):
     # Tomando información del usuario
     user_id = request.user.id
     if request.method == 'GET':
-        return get_contents(user_id)
+        return get_interactive_contents(user_id)
     elif request.method == 'POST':
         resources = json.loads(request.body)
         return set_contents(resources, user_id)
@@ -113,12 +131,14 @@ def courses_view(request):
         response.renderer_context = {}
         return response
 
-    @api_view(['GET'])
-    @authentication_classes([TokenAuthentication])
-    @permission_classes([IsAuthenticated])
-    def contents_view(request):
-
-        return JsonResponse({})
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def contents_view(request):
+    # Tomando información del usuario
+    user_id = request.user.id
+    if request.method == 'GET':
+        return get_contents(user_id)
 
 
 class ContentCreator(APIView):
