@@ -18,7 +18,7 @@ class Actividad(models.Model):
     numeroDeIntentos = models.IntegerField(default=0)
     tieneRetroalimentacion = models.BooleanField(default=False)
     marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
-    retroalimentacion = models.CharField(max_length=200, null=True)
+    retroalimentacion = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -30,7 +30,7 @@ class Calificacion(models.Model):
     calificacion = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return self.calificacion
+        return str(self.calificacion)
 
 
 class PreguntaOpcionMultiple(Actividad):
@@ -59,12 +59,12 @@ class Opcionmultiple(models.Model):
     opcion = models.CharField(max_length=200)
     esCorrecta = models.BooleanField()
     preguntaSeleccionMultiple = models.ForeignKey(
-        PreguntaOpcionMultiple, on_delete=models.CASCADE)
+        PreguntaOpcionMultiple, on_delete=models.CASCADE, related_name='opciones')
 
 
 class RespuestmultipleEstudiante(Respuesta):
     respuestmultiple = models.ForeignKey(
-        Opcionmultiple,null=True, on_delete=models.SET_NULL)
+        Opcionmultiple, null=True, on_delete=models.SET_NULL)
 
 
 class RespuestaAbiertaEstudiante(Respuesta):
