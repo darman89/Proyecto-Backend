@@ -5,7 +5,7 @@ from activities.models import Marca, Actividad, RespuestmultipleEstudiante
 class MarcaSerializer(serializers.ModelSerializer):
     class Meta:
         model = Marca
-        fields = ('id', 'nombre', 'punto', 'contenido')
+        fields = ('id', 'nombre', 'punto')
 
     def create(self, validated_data):
         return Marca.objects.create(**validated_data)
