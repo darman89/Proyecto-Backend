@@ -4,18 +4,19 @@ from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.generics import GenericAPIView
+from rest_framework.mixins import ListModelMixin, CreateModelMixin
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.utils import json
 from rest_framework.views import APIView
-from rest_framework.generics import GenericAPIView
-from rest_framework.mixins import ListModelMixin, CreateModelMixin
+
 from interactive_content.models import Contenido, Curso, ContenidoInteractivo
-from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer
+from interactive_content.serializers import CursoSerializer, ContenidoInteractivoSerializer, ContenidoSerializer
 
 
-def get_contents(user_id):
+def get_interactive_contents(user_id):
     # Verificar que el docente tenga contenido creado
     try:
         # Recuperar el contenido que creó el profesor
@@ -26,6 +27,24 @@ def get_contents(user_id):
     else:
         # Devolver los resultados de la consulta en formato JSON
         serializer_class = ContenidoInteractivoSerializer(contents_list, many=True)
+        response = Response(serializer_class.data, status=status.HTTP_200_OK)
+        response.accepted_renderer = JSONRenderer()
+        response.accepted_media_type = "application/json"
+        response.renderer_context = {}
+        return response
+
+
+def get_contents(user_id):
+    # Verificar que el docente tenga contenido creado
+    try:
+        # Recuperar el contenido que creó el profesor
+        contents_list = Contenido.objects.filter(profesor_id=user_id)
+    except (KeyError, Contenido.DoesNotExist):
+        # devolver vacio si no existe contenido creado por el usuario
+        return JsonResponse({})
+    else:
+        # Devolver los resultados de la consulta en formato JSON
+        serializer_class = ContenidoSerializer(contents_list, many=True)
         response = Response(serializer_class.data, status=status.HTTP_200_OK)
         response.accepted_renderer = JSONRenderer()
         response.accepted_media_type = "application/json"
@@ -49,11 +68,11 @@ def set_contents(resources, user_id):
 @api_view(['GET', 'POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def contents_view(request):
+def interactive_contents_view(request):
     # Tomando información del usuario
     user_id = request.user.id
     if request.method == 'GET':
-        return get_contents(user_id)
+        return get_interactive_contents(user_id)
     elif request.method == 'POST':
         resources = json.loads(request.body)
         return set_contents(resources, user_id)
@@ -112,6 +131,15 @@ def courses_view(request):
         response.renderer_context = {}
         return response
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def contents_view(request):
+    # Tomando información del usuario
+    user_id = request.user.id
+    if request.method == 'GET':
+        return get_contents(user_id)
+
 
 class ContentCreator(APIView):
     authentication_classes = (TokenAuthentication,)
@@ -129,7 +157,11 @@ class ContentCreator(APIView):
                 interactive_content.curso.add(course_obj)
         return Response(status=status.HTTP_201_CREATED)
 
+
 class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
     # queryset usado para retornar los objetos requeridos
     queryset = ContenidoInteractivo.objects.all()
     # clase serializer para la transformacion de datos del request
@@ -144,4 +176,22 @@ class ContInteractivoView(ListModelMixin, CreateModelMixin, GenericAPIView):
         return self.list(request, *args, *kwargs)
 
     def post(self, request, *args, **kwargs):
-        return self.create(request, *args, **kwargs)
+        user = request.user.get_real_instance()
+        if user.__class__.__name__ == 'Profesor':
+            new_content_data = request.data
+            contenido_id = int(new_content_data['contenido'])
+            user_id = user.id
+
+            contenido = get_object_or_404(Contenido.objects.filter(profesor_id=user_id, pk=contenido_id))
+            new_content_data['contenido'] = contenido
+
+            ci = ContenidoInteractivo.objects.create(**new_content_data)
+
+            serializer_class = ContenidoInteractivoSerializer(ci, many=False)
+            response = Response(serializer_class.data, status=status.HTTP_200_OK)
+            response.accepted_renderer = JSONRenderer()
+            response.accepted_media_type = "application/json"
+            response.renderer_context = {}
+            return response
+        else:
+            return JsonResponse({'message': 'Unauthorized'}, status=401)
