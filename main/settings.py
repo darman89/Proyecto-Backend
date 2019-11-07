@@ -129,13 +129,14 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# heroku workaround
+# heroku workaround (codeship)
 if '/app' in os.environ['HOME']:
     import django_heroku
     django_heroku.settings(locals())
 
-# django_heroku.settings(locals())
 # sslmode issue workaround (dev)
+# import django_heroku
+# django_heroku.settings(locals())
 # del DATABASES['default']['OPTIONS']['sslmode']
 
 REST_FRAMEWORK = {
