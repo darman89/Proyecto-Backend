@@ -131,7 +131,7 @@ STATICFILES_DIRS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 django_heroku.settings(locals())
-# sslmode issue workaround
+# sslmode issue workaround (dev)
 # del DATABASES['default']['OPTIONS']['sslmode']
 
 REST_FRAMEWORK = {
