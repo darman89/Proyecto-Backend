@@ -129,6 +129,7 @@ STATICFILES_DIRS = (
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# heroku workaround
 if '/app' in os.environ['HOME']:
     import django_heroku
     django_heroku.settings(locals())
